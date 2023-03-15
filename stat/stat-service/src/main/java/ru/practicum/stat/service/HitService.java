@@ -1,5 +1,7 @@
-import dto.HitDto;
-import dto.StatsDto;
+package ru.practicum.stat.service;
+
+import ru.practicum.stat.dto.HitDto;
+import ru.practicum.stat.dto.StatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

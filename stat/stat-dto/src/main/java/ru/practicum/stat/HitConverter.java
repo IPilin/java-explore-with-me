@@ -1,5 +1,7 @@
-import dto.HitDto;
-import model.Hit;
+package ru.practicum.stat;
+
+import ru.practicum.stat.dto.HitDto;
+import ru.practicum.stat.model.Hit;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

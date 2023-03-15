@@ -1,4 +1,4 @@
-package dto;
+package ru.practicum.stat.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

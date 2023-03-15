@@ -1,4 +1,4 @@
-package model;
+package ru.practicum.stat.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
