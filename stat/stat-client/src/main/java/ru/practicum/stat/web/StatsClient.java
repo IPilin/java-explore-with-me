@@ -42,6 +42,6 @@ public class StatsClient {
                 .retrieve()
                 .bodyToMono(StatsDto[].class)
                 .block();
-        return response == null ? new ArrayList<>(): List.of(response);
+        return response == null ? new ArrayList<>() : List.of(response);
     }
 }

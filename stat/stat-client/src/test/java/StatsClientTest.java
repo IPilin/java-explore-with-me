@@ -30,7 +30,7 @@ public class StatsClientTest {
 
     @Test
     @SneakyThrows
-    public void WebClientHitTest() {
+    public void webClientHitTest() {
         server.enqueue(new MockResponse());
         var dto = new HitDto(1L, "app", "uri", "1.1.1.1", "2022-09-06 11:00:23");
         client.createHit(dto);
@@ -49,7 +49,7 @@ public class StatsClientTest {
 
     @Test
     @SneakyThrows
-    public void WebClientStatsTest() {
+    public void webClientStatsTest() {
         var stats = new StatsDto("app", "uri", 2L);
         var response = new MockResponse()
                 .setResponseCode(200)
