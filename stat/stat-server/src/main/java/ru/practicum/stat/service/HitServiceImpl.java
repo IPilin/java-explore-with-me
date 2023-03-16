@@ -19,7 +19,7 @@ public class HitServiceImpl implements HitService {
 
     @Override
     public void create(HitDto hitDto) {
-        repository.save(converter.fromDto(hitDto));
+       repository.save(converter.fromDto(hitDto));
     }
 
     @Override
