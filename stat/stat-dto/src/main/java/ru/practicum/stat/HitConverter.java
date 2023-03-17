@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class HitConverter {
-    ModelMapper mapper;
+    private final ModelMapper mapper;
     Converter<String, LocalDateTime> stringToDate = (timestamp) -> {
         var format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(timestamp.getSource(), format);

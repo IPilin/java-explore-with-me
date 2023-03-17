@@ -1,5 +1,5 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +9,7 @@ import ru.practicum.stat.dto.HitDto;
 import ru.practicum.stat.dto.StatsDto;
 import ru.practicum.stat.web.StatsClient;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,8 +21,7 @@ public class StatsClientTest {
     private ObjectMapper mapper;
 
     @BeforeEach
-    @SneakyThrows
-    public void setUp() {
+    public void setUp() throws IOException {
         mapper = new ObjectMapper();
         server = new MockWebServer();
         server.start();
@@ -29,8 +29,7 @@ public class StatsClientTest {
     }
 
     @Test
-    @SneakyThrows
-    public void webClientHitTest() {
+    public void webClientHitTest() throws JsonProcessingException, InterruptedException {
         server.enqueue(new MockResponse());
         var dto = new HitDto(1L, "app", "uri", "1.1.1.1", "2022-09-06 11:00:23");
         client.createHit(dto);
@@ -48,8 +47,7 @@ public class StatsClientTest {
     }
 
     @Test
-    @SneakyThrows
-    public void webClientStatsTest() {
+    public void webClientStatsTest() throws JsonProcessingException, InterruptedException {
         var stats = new StatsDto("app", "uri", 2L);
         var response = new MockResponse()
                 .setResponseCode(200)
@@ -68,8 +66,7 @@ public class StatsClientTest {
     }
 
     @AfterEach
-    @SneakyThrows
-    public void shutDown() {
+    public void shutDown() throws IOException {
         server.shutdown();
     }
 }
