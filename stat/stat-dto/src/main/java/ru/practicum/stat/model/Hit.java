@@ -1,8 +1,9 @@
 package ru.practicum.stat.model;
 
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -10,8 +11,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "hits")
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Hit {
     @Id
