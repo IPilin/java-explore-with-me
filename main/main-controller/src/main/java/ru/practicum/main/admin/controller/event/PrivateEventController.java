@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.main.model.event.converter.EventConverter;
+import ru.practicum.main.model.converter.Converter;
 import ru.practicum.main.model.event.dto.EventFullDto;
 import ru.practicum.main.model.event.dto.EventShortDto;
 import ru.practicum.main.model.event.dto.NewEventDto;
@@ -19,12 +19,11 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class PrivateEventController {
     private final EventService service;
-    private final EventConverter converter;
+    private final Converter converter;
 
     @GetMapping
     public Collection<EventShortDto> getAllByUserId(@PathVariable @Positive Long userId) {
-        //return service.getAllByUserId(userId);
-        return null;
+        return converter.toClassCollection(service.getAllByUserId(userId), EventShortDto.class);
     }
 
     @PostMapping

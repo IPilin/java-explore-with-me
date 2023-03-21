@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.main.model.category.Category;
 import ru.practicum.main.model.category.CategoryDto;
-import ru.practicum.main.model.category.converter.CategoryConverter;
+import ru.practicum.main.model.converter.Converter;
 import ru.practicum.main.model.exception.ConflictException;
 import ru.practicum.main.model.exception.NotFoundException;
 import ru.practicum.main.repository.category.CategoryRepository;
@@ -18,12 +18,12 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
-    private final CategoryConverter converter;
+    private final Converter converter;
 
     @Override
     public Category create(CategoryDto categoryDto) {
         try {
-            return repository.save(converter.fromDto(categoryDto));
+            return repository.save(converter.toClass(categoryDto, Category.class));
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException(e.getMessage());
         }

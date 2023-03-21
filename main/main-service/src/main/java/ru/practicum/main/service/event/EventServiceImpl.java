@@ -3,7 +3,7 @@ package ru.practicum.main.service.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.main.model.constant.AppConstants;
-import ru.practicum.main.model.event.converter.EventConverter;
+import ru.practicum.main.model.converter.Converter;
 import ru.practicum.main.model.event.dto.EventState;
 import ru.practicum.main.model.event.dto.NewEventDto;
 import ru.practicum.main.model.event.model.Event;
@@ -21,7 +21,7 @@ import java.util.Collection;
 public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
-    private final EventConverter converter;
+    private final Converter converter;
     private final UserService userService;
     private final CategoryService categoryService;
 
