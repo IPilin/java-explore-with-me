@@ -1,4 +1,4 @@
-package ru.practicum.main.model.event;
+package ru.practicum.main.model.location;
 
 import lombok.AccessLevel;
 import lombok.Getter;
