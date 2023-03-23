@@ -6,7 +6,7 @@ import ru.practicum.main.model.event.model.Event;
 import java.util.Collection;
 
 public interface EventService {
-    Collection<Event> getAllByUserId(Long userId);
+    Collection<Event> getAllByUserId(Long userId, Integer from, Integer size);
 
     Event create(Long userId, NewEventDto eventDto);
 
