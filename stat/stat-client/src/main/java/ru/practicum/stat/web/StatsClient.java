@@ -9,7 +9,6 @@ import ru.practicum.stat.dto.StatsDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class StatsClient {
@@ -30,7 +29,7 @@ public class StatsClient {
                 .block();
     }
 
-    public Collection<StatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public List<StatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         var response = client.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
                         .queryParam("start", start.format(format))

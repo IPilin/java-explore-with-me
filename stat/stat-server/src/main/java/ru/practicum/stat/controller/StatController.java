@@ -26,7 +26,7 @@ public class StatController {
     public Collection<StatsDto> getStats(@RequestParam LocalDateTime start,
                                          @RequestParam LocalDateTime end,
                                          @RequestParam(required = false) List<String> uris,
-                                         @RequestParam(defaultValue = "false")Boolean unique) {
+                                         @RequestParam(defaultValue = "false") Boolean unique) {
         return service.get(start, end, uris, unique);
     }
 }

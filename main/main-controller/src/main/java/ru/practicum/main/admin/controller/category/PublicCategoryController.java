@@ -7,7 +7,6 @@ import ru.practicum.main.model.category.Category;
 import ru.practicum.main.service.category.CategoryService;
 
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 @Validated
@@ -18,8 +17,8 @@ public class PublicCategoryController {
     private final CategoryService service;
 
     @GetMapping
-    public Collection<Category> getAll(@RequestParam @PositiveOrZero Integer from,
-                                       @RequestParam @Positive Integer size) {
+    public Collection<Category> getAll(@RequestParam(defaultValue = "0") Integer from,
+                                       @RequestParam(defaultValue = "10") @Positive Integer size) {
         return service.getAll(from, size);
     }
 

@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.main.model.category.Category;
-import ru.practicum.main.model.event.dto.EventState;
 import ru.practicum.main.model.location.Location;
 import ru.practicum.main.model.user.User;
 
@@ -55,7 +54,7 @@ public class Event {
     @Column(name = "published")
     LocalDateTime publishedOn;
     @Transient
-    Long confirmedRequests;
+    int confirmedRequests;
     @Transient
-    Long views;
+    int views;
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.main.model.category.CategoryDto;
+import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.location.LocationDto;
 import ru.practicum.main.model.user.UserShortDto;
 

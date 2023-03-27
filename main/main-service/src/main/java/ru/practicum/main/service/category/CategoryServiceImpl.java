@@ -11,6 +11,7 @@ import ru.practicum.main.model.category.CategoryMapper;
 import ru.practicum.main.model.exception.ConflictException;
 import ru.practicum.main.model.exception.NotFoundException;
 import ru.practicum.main.repository.category.CategoryRepository;
+import ru.practicum.main.repository.event.EventRepository;
 
 import java.util.Collection;
 
@@ -18,6 +19,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
+    private final EventRepository eventRepository;
     private final CategoryMapper mapper;
 
     @Override
@@ -41,6 +43,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void remove(Long catId) {
         try {
+            if (eventRepository.existsByCategoryId(catId)) {
+                throw new ConflictException("The category is not empty.");
+            }
             repository.deleteById(catId);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(String.format("Category with id=%d was not found", catId));

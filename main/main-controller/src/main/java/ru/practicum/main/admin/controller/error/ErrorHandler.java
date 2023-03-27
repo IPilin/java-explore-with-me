@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.practicum.main.model.exception.ApiError;
 import ru.practicum.main.model.exception.ConflictException;
+import ru.practicum.main.model.exception.ForbiddenException;
 import ru.practicum.main.model.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -48,6 +49,18 @@ public class ErrorHandler {
         var error = ApiError.builder()
                 .status(HttpStatus.CONFLICT.name())
                 .reason("Integrity constraint has been violated.")
+                .message(e.getMessage())
+                .build();
+        log.warn(error.toString());
+        return error;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleForbiddenException(ForbiddenException e) {
+        var error = ApiError.builder()
+                .status(HttpStatus.FORBIDDEN.name())
+                .reason("For the requested operation the conditions are not met.")
                 .message(e.getMessage())
                 .build();
         log.warn(error.toString());
