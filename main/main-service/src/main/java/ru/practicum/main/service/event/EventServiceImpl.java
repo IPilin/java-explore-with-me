@@ -66,6 +66,7 @@ public class EventServiceImpl implements EventService {
         }
         return load(event.get());
     }
+
     @Override
     public Event find(Long eventId) {
         var event = repository.findById(eventId)

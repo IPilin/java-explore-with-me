@@ -10,5 +10,6 @@ import java.util.Collection;
 @Mapper(componentModel = "spring", uses = EventMapper.class)
 public interface EventListMapper {
     Collection<EventShortDto> toShortCollection(Collection<Event> events);
+
     Collection<EventFullDto> toFullCollection(Collection<Event> events);
 }

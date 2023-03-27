@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class ViewStatsClient {
-    private final static LocalDateTime START_TIME = LocalDateTime.of(2023, 1, 1, 1, 1, 1);
-    private final static LocalDateTime END_TIME = LocalDateTime.of(2123, 1, 1, 1, 1, 1);
+    private static final LocalDateTime START_TIME = LocalDateTime.of(2023, 1, 1, 1, 1, 1);
+    private static final LocalDateTime END_TIME = LocalDateTime.of(2123, 1, 1, 1, 1, 1);
     private final String appName;
     private final StatsClient statsClient;
 

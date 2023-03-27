@@ -39,5 +39,6 @@ public interface EventService {
                                     EventSort sort,
                                     Integer from, Integer size,
                                     String ip);
+
     Event findPublic(Long eventId, String ip);
 }
