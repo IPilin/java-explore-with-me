@@ -49,14 +49,14 @@ public class PrivateEventController {
 
     @GetMapping("/{eventId}")
     public EventFullDto getById(@PathVariable @Positive Long userId,
-                         @PathVariable @Positive Long eventId) {
+                                @PathVariable @Positive Long eventId) {
         return mapper.toFullDto(service.find(userId, eventId));
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto update(@PathVariable @Positive Long userId,
-                        @PathVariable @Positive Long eventId,
-                        @RequestBody @Validated(OnUpdate.class) NewEventDto eventDto) {
+                               @PathVariable @Positive Long eventId,
+                               @RequestBody @Validated(OnUpdate.class) NewEventDto eventDto) {
         return mapper.toFullDto(service.update(userId, eventId, eventDto));
     }
 
@@ -68,8 +68,8 @@ public class PrivateEventController {
 
     @PatchMapping("/{eventId}/requests")
     public Map<String, Collection<RequestDto>> updateRequests(@PathVariable @Positive Long userId,
-                                                        @PathVariable @Positive Long eventId,
-                                                        @RequestBody @Validated UpdateRequestDto updateRequestDto) {
+                                                              @PathVariable @Positive Long eventId,
+                                                              @RequestBody @Validated UpdateRequestDto updateRequestDto) {
         return requestService.updateRequests(userId, eventId, updateRequestDto);
     }
 }

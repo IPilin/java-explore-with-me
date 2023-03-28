@@ -8,11 +8,11 @@ import ru.practicum.main.model.constant.AppConstants;
 import ru.practicum.main.model.event.EventMapper;
 import ru.practicum.main.model.event.EventSort;
 import ru.practicum.main.model.event.dto.EventAdminDto;
-import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.event.dto.NewEventDto;
 import ru.practicum.main.model.event.filter.EventFilter;
 import ru.practicum.main.model.event.filter.EventSpecification;
 import ru.practicum.main.model.event.model.Event;
+import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.exception.ForbiddenException;
 import ru.practicum.main.model.exception.NotFoundException;
 import ru.practicum.main.model.request.model.Request;
@@ -26,7 +26,6 @@ import ru.practicum.main.service.user.UserService;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,13 +57,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event find(Long userId, Long eventId) {
-        var errorMsg = String.format("Event with id=%d was not found", eventId);
         var user = userService.get(userId);
-        var event = repository.findById(eventId);
-        if (event.isEmpty() || !Objects.equals(user.getId(), event.get().getInitiator().getId())) {
-            throw new NotFoundException(errorMsg);
-        }
-        return load(event.get());
+        var event = repository.findByIdAndInitiatorIs(eventId, user)
+                .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d was not found", eventId)));
+        return load(event);
     }
 
     @Override

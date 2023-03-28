@@ -22,8 +22,8 @@ public class AdminUserController {
 
     @GetMapping
     public Collection<User> get(@RequestParam List<Long> ids,
-                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
-                                     @RequestParam(defaultValue = "10") @Positive Integer size) {
+                                @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                @RequestParam(defaultValue = "10") @Positive Integer size) {
         return userService.getAll(ids, from, size);
     }
 

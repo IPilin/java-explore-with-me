@@ -7,6 +7,8 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.main.model.category.CategoryDto;
 import ru.practicum.main.model.user.UserShortDto;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,7 +18,7 @@ public class EventShortDto {
     String annotation;
     CategoryDto category;
     Integer confirmedRequests;
-    String eventDate;
+    LocalDateTime eventDate;
     UserShortDto initiator;
     Boolean paid;
     Integer views;

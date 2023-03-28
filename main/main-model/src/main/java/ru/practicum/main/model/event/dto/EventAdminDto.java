@@ -1,6 +1,5 @@
 package ru.practicum.main.model.event.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +14,6 @@ public class EventAdminDto {
     String annotation;
     String description;
     Long category;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
     LocationDto location;
     Boolean paid;

@@ -9,6 +9,8 @@ import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.location.LocationDto;
 import ru.practicum.main.model.user.UserShortDto;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -17,8 +19,8 @@ public class EventFullDto {
     String title;
     String annotation;
     String description;
-    String createdOn;
-    String eventDate;
+    LocalDateTime createdOn;
+    LocalDateTime eventDate;
     LocationDto location;
     CategoryDto category;
     Boolean paid;
@@ -26,7 +28,7 @@ public class EventFullDto {
     Boolean requestModeration;
     UserShortDto initiator;
     EventState state;
-    String publishedOn;
+    LocalDateTime publishedOn;
     Long confirmedRequests;
     Long views;
 }

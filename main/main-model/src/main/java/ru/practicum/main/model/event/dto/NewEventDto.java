@@ -1,6 +1,5 @@
 package ru.practicum.main.model.event.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +30,6 @@ public class NewEventDto {
     Long category;
     LocalDateTime createdOn = LocalDateTime.now();
     @NotNull(groups = OnCreate.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime eventDate;
     @NotNull(groups = OnCreate.class)
     LocationDto location;

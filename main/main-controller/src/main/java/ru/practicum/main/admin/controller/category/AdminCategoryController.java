@@ -24,7 +24,7 @@ public class AdminCategoryController {
 
     @PatchMapping("/{catId}")
     public Category change(@PathVariable @Positive Long catId,
-                                   @RequestBody @Validated CategoryDto categoryDto) {
+                           @RequestBody @Validated CategoryDto categoryDto) {
         return service.change(catId, categoryDto);
     }
 
