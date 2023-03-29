@@ -2,7 +2,7 @@ package ru.practicum.stat.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.stat.HitConverter;
+import ru.practicum.stat.HitMapper;
 import ru.practicum.stat.dto.HitDto;
 import ru.practicum.stat.dto.StatsDto;
 import ru.practicum.stat.repository.HitRepository;
@@ -15,11 +15,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HitServiceImpl implements HitService {
     private final HitRepository repository;
-    private final HitConverter converter;
+    private final HitMapper mapper;
 
     @Override
     public void create(HitDto hitDto) {
-       repository.save(converter.fromDto(hitDto));
+       repository.save(mapper.fromDto(hitDto));
     }
 
     @Override

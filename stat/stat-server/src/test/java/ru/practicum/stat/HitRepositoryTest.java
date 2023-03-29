@@ -19,12 +19,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class HitRepositoryTest {
     @Autowired
     HitRepository repository;
-    HitConverter converter = new HitConverter();
+    HitMapper mapper = new HitMapperImpl();
 
     @Test
     public void saveHitTest() {
         var hitDto = new HitDto(null, "app", "uri", "1.1.1.1", "2022-11-12 11:23:55");
-        var hit = repository.save(converter.fromDto(hitDto));
+        var hit = repository.save(mapper.fromDto(hitDto));
 
         assertThat(hit.getApp()).isEqualTo(hitDto.getApp());
         assertThat(hit.getUri()).isEqualTo(hitDto.getUri());
@@ -35,11 +35,11 @@ public class HitRepositoryTest {
     @Test
     public void findStatsTest() {
         var hitDto = new HitDto(null, "app", "uri", "1.1.1.1", "2022-11-12 11:23:55");
-        repository.save(converter.fromDto(hitDto));
-        repository.save(converter.fromDto(hitDto));
-        repository.save(converter.fromDto(hitDto));
+        repository.save(mapper.fromDto(hitDto));
+        repository.save(mapper.fromDto(hitDto));
+        repository.save(mapper.fromDto(hitDto));
         hitDto.setUri("newUri");
-        repository.save(converter.fromDto(hitDto));
+        repository.save(mapper.fromDto(hitDto));
 
         var stats = repository.findStats(LocalDateTime.now().minusYears(2), LocalDateTime.now());
 
