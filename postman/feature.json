@@ -6481,6 +6481,10 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{request_body}}"
+						},
 						"url": {
 							"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
 							"host": [
@@ -6743,7 +6747,7 @@
 									"\r",
 									"        pm.request.body.update({\r",
 									"            mode: 'raw',\r",
-									"            raw: comment,\r",
+									"            raw: JSON.stringify(comment),\r",
 									"            options: { raw: { language: 'json' } }\r",
 									"        });\r",
 									"\r",
@@ -6809,6 +6813,10 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{request_body}}"
+						},
 						"url": {
 							"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 							"host": [
