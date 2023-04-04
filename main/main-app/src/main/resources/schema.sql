@@ -86,20 +86,23 @@ CREATE TABLE IF NOT EXISTS comments_history
     comment_id  BIGINT REFERENCES comments (id) ON DELETE CASCADE,
     modified_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     old_content TEXT                        NOT NULL,
-    new_content TEXT                        NOT NULL
+    new_content TEXT                        NOT NULL,
+    old_status  TEXT                        NOT NULL,
+    new_status  TEXT                        NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION log_comment_history()
-    RETURNS TRIGGER AS '
-BEGIN
-    IF NEW.content <> OLD.content THEN
-        INSERT INTO comments_history(comment_id, modified_at, old_content, new_content)
-        VALUES (NEW.id, now(), OLD.content, NEW.content);
-    end if;
+    RETURNS TRIGGER AS
+'
+    BEGIN
+        IF NEW.content <> OLD.content OR NEW.status <> OLD.status THEN
+            INSERT INTO comments_history(comment_id, modified_at, old_content, new_content, old_status, new_status)
+            VALUES (NEW.id, now(), OLD.content, NEW.content, OLD.status, NEW.status);
+        end if;
 
-    RETURN NEW;
-END; '
-LANGUAGE plpgsql;
+        RETURN NEW;
+    END; '
+    LANGUAGE plpgsql;
 
 CREATE OR REPLACE TRIGGER comment_changes
     BEFORE UPDATE

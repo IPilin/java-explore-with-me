@@ -3,12 +3,15 @@ package ru.practicum.main.service.comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.main.model.comment.Comment;
-import ru.practicum.main.model.comment.CommentStatus;
-import ru.practicum.main.model.comment.NewCommentDto;
+import ru.practicum.main.model.comment.CommentMapper;
+import ru.practicum.main.model.comment.dto.CommentHistoryDto;
+import ru.practicum.main.model.comment.dto.NewCommentDto;
+import ru.practicum.main.model.comment.model.Comment;
+import ru.practicum.main.model.comment.model.CommentStatus;
 import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.exception.ForbiddenException;
 import ru.practicum.main.model.exception.NotFoundException;
+import ru.practicum.main.repository.comment.CommentHistoryRepository;
 import ru.practicum.main.repository.comment.CommentRepository;
 import ru.practicum.main.service.event.EventService;
 import ru.practicum.main.service.user.UserService;
@@ -20,8 +23,10 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
+    private final CommentHistoryRepository historyRepository;
     private final UserService userService;
     private final EventService eventService;
+    private final CommentMapper mapper;
 
     @Override
     public Comment create(Long userId, Long eventId, NewCommentDto newCommentDto) {
@@ -49,7 +54,18 @@ public class CommentServiceImpl implements CommentService {
         var comment = repository.findByIdAndAuthorIs(commentId, user)
                 .orElseThrow(() -> new NotFoundException(String.format("Comment with id=%d not found.", commentId)));
         comment.setContent(newCommentDto.getContent());
+        comment.setStatus(CommentStatus.CHANGED);
         return repository.save(comment);
+    }
+
+    @Override
+    public void remove(Long userId, Long commentId) {
+        var user = userService.get(userId);
+        var comment = repository.findByIdAndAuthorIs(commentId, user)
+                .orElseThrow(() -> new NotFoundException(String.format("Comment with id=%d not found.", commentId)));
+        comment.setStatus(CommentStatus.DELETED);
+        comment.setContent("");
+        repository.save(comment);
     }
 
     @Override
@@ -59,11 +75,22 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Collection<Comment> getAllByEvent(Long eventId, Integer from, Integer size) {
+    public Collection<Comment> getAllByEvent(Long eventId, Boolean withChild, Integer from, Integer size) {
         var event = eventService.find(eventId);
         if (event.getState() != EventState.PUBLISHED) {
             throw new ForbiddenException("Event isn't public.");
         }
-        return repository.findAllByEventIsAndParentIdIsNull(event, PageRequest.of(from / size, size));
+        return withChild ?
+                repository.findAllByEventIsAndParentIdIsNull(event, PageRequest.of(from / size, size)) :
+                repository.findAllByParentIdIsNullAndEventIs(event, PageRequest.of(from / size, size));
+    }
+
+    @Override
+    public CommentHistoryDto getHistory(Long commentId) {
+        var comment = repository.findById(commentId)
+                        .orElseThrow(() -> new NotFoundException(String.format("Comment with id=%d not found.", commentId)));
+        var history = historyRepository.findAllByCommentIdIs(commentId);
+
+        return new CommentHistoryDto(mapper.toShortDto(comment), history);
     }
 }

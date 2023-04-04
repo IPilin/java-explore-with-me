@@ -1,4 +1,4 @@
-package ru.practicum.main.model.comment;
+package ru.practicum.main.model.comment.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;

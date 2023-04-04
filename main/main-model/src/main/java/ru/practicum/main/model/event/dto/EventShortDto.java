@@ -22,4 +22,5 @@ public class EventShortDto {
     UserShortDto initiator;
     Boolean paid;
     Integer views;
+    Integer comments;
 }

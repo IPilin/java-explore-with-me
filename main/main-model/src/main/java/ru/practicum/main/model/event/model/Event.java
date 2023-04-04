@@ -57,4 +57,6 @@ public class Event {
     int confirmedRequests;
     @Transient
     int views;
+    @Transient
+    int comments;
 }

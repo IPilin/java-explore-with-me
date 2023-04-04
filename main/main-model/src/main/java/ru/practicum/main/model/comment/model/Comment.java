@@ -1,7 +1,9 @@
-package ru.practicum.main.model.comment;
+package ru.practicum.main.model.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import ru.practicum.main.model.event.model.Event;
 import ru.practicum.main.model.user.User;
 
@@ -36,7 +38,8 @@ public class Comment {
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     Event event;
 
-    @OneToMany(mappedBy = "parentId", orphanRemoval = true)
+    @OneToMany(mappedBy = "parentId")
+    @LazyCollection(LazyCollectionOption.EXTRA)
     List<Comment> comments;
 
     @Column(name = "parent_id")
@@ -45,8 +48,4 @@ public class Comment {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     CommentStatus status;
-
-    public Comment(Comment comment, Integer count) {
-
-    }
 }

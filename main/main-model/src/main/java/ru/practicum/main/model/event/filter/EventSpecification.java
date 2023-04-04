@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 
 
 public class EventSpecification implements Specification<Event> {
@@ -53,7 +54,7 @@ public class EventSpecification implements Specification<Event> {
 
         if (filter.getRangeStart() == null) {
             p.getExpressions()
-                    .add(cb.greaterThan(root.get("eventDate"), filter.getRangeStart()));
+                    .add(cb.greaterThan(root.get("eventDate"), LocalDateTime.now()));
         } else {
             p.getExpressions()
                     .add(cb.between(root.get("eventDate"), filter.getRangeStart(), filter.getRangeEnd()));

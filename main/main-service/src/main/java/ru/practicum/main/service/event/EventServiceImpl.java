@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.main.model.ViewStatsClient;
+import ru.practicum.main.model.comment.model.Comment;
 import ru.practicum.main.model.constant.AppConstants;
 import ru.practicum.main.model.event.EventMapper;
 import ru.practicum.main.model.event.EventSort;
@@ -17,6 +18,7 @@ import ru.practicum.main.model.exception.ForbiddenException;
 import ru.practicum.main.model.exception.NotFoundException;
 import ru.practicum.main.model.request.model.Request;
 import ru.practicum.main.model.request.model.RequestState;
+import ru.practicum.main.repository.comment.CommentRepository;
 import ru.practicum.main.repository.event.EventRepository;
 import ru.practicum.main.repository.event.LocationRepository;
 import ru.practicum.main.repository.request.RequestRepository;
@@ -34,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final EventMapper mapper;
     private final UserService userService;
     private final CategoryService categoryService;
@@ -186,6 +189,7 @@ public class EventServiceImpl implements EventService {
     private List<Event> load(List<Event> events) {
         loadViews(events);
         loadRequests(events);
+        loadComments(events);
         return events;
     }
 
@@ -209,5 +213,12 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.groupingBy(Request::getEvent, Collectors.counting()));
         events.forEach((event) -> event.setConfirmedRequests(requests.getOrDefault(event, 0L).intValue()));
+    }
+
+    private void loadComments(List<Event> events) {
+        var comments = commentRepository.findAllByEventIn(events)
+                .stream()
+                .collect(Collectors.groupingBy(Comment::getEvent, Collectors.counting()));
+        events.forEach((event) -> event.setComments(comments.getOrDefault(event, 0L).intValue()));
     }
 }
