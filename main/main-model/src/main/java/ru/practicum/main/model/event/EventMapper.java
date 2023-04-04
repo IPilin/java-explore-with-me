@@ -26,4 +26,5 @@ public interface EventMapper {
         var cat = new Category();
         cat.setId(value);
         return cat;
-    }}
+    }
+}
