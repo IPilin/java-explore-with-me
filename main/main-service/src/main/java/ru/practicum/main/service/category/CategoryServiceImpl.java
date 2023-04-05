@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.category.Category;
 import ru.practicum.main.model.category.CategoryDto;
 import ru.practicum.main.model.category.CategoryMapper;
@@ -22,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
     private final CategoryMapper mapper;
 
+    @Transactional(rollbackFor = DataIntegrityViolationException.class)
     @Override
     public Category create(CategoryDto categoryDto) {
         try {
@@ -31,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional
     @Override
     public Category change(Long catId, CategoryDto categoryDto) {
         if (!repository.existsById(catId)) {
@@ -40,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         return create(categoryDto);
     }
 
+    @Transactional
     @Override
     public void remove(Long catId) {
         try {
@@ -52,11 +56,13 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Category> getAll(Integer from, Integer size) {
         return repository.findAll(PageRequest.of(from / size, size)).getContent();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Category getById(Long catId) {
         return repository.findById(catId)

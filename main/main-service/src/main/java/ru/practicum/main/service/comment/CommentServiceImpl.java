@@ -3,6 +3,7 @@ package ru.practicum.main.service.comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.comment.CommentMapper;
 import ru.practicum.main.model.comment.dto.CommentHistoryDto;
 import ru.practicum.main.model.comment.dto.NewCommentDto;
@@ -28,6 +29,7 @@ public class CommentServiceImpl implements CommentService {
     private final EventService eventService;
     private final CommentMapper mapper;
 
+    @Transactional
     @Override
     public Comment create(Long userId, Long eventId, NewCommentDto newCommentDto) {
         var user = userService.get(userId);
@@ -48,6 +50,7 @@ public class CommentServiceImpl implements CommentService {
         return repository.save(commentBuilder.build());
     }
 
+    @Transactional
     @Override
     public Comment update(Long userId, Long commentId, NewCommentDto newCommentDto) {
         var user = userService.get(userId);
@@ -58,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
         return repository.save(comment);
     }
 
+    @Transactional
     @Override
     public void remove(Long userId, Long commentId) {
         var user = userService.get(userId);
@@ -68,12 +72,14 @@ public class CommentServiceImpl implements CommentService {
         repository.save(comment);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Comment> getAllByUser(Long userId, Integer from, Integer size) {
         var user = userService.get(userId);
         return repository.findAllByAuthorIs(user, PageRequest.of(from / size, size));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Comment> getAllByEvent(Long eventId, Boolean withChild, Integer from, Integer size) {
         var event = eventService.find(eventId);
@@ -85,6 +91,7 @@ public class CommentServiceImpl implements CommentService {
                 repository.findAllByParentIdIsNullAndEventIs(event, PageRequest.of(from / size, size));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CommentHistoryDto getHistory(Long commentId) {
         var comment = repository.findById(commentId)

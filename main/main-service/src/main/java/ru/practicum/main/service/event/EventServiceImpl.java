@@ -3,6 +3,7 @@ package ru.practicum.main.service.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.ViewStatsClient;
 import ru.practicum.main.model.comment.model.Comment;
 import ru.practicum.main.model.constant.AppConstants;
@@ -42,11 +43,13 @@ public class EventServiceImpl implements EventService {
     private final CategoryService categoryService;
     private final ViewStatsClient statsClient;
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> getAllByUserId(Long userId, Integer from, Integer size) {
         return load(repository.findAllByInitiator(userService.get(userId), PageRequest.of(from / size, size)));
     }
 
+    @Transactional
     @Override
     public Event create(Long userId, NewEventDto eventDto) {
         var event = mapper.fromNewEvent(eventDto);
@@ -58,6 +61,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event find(Long userId, Long eventId) {
         var user = userService.get(userId);
@@ -66,6 +70,7 @@ public class EventServiceImpl implements EventService {
         return load(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event find(Long eventId) {
         var event = repository.findById(eventId)
@@ -73,6 +78,7 @@ public class EventServiceImpl implements EventService {
         return load(event);
     }
 
+    @Transactional
     @Override
     public Event update(Long userId, Long eventId, NewEventDto eventDto) {
         var event = find(userId, eventId);
@@ -93,6 +99,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional
     @Override
     public Event updateAdmin(Long eventId, EventAdminDto eventDto) {
         var event = repository.findById(eventId)
@@ -117,6 +124,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> findAllAdmin(List<Long> users,
                                           List<EventState> states,
@@ -136,6 +144,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> findAllPublic(String text,
                                            List<Long> categories,
@@ -161,6 +170,7 @@ public class EventServiceImpl implements EventService {
         return events;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event findPublic(Long eventId, String ip) {
         var event = repository.findEventByIdAndStateEquals(eventId, EventState.PUBLISHED)

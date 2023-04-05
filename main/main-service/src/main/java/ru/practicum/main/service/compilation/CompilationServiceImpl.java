@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.compilation.CompilationMapper;
 import ru.practicum.main.model.compilation.dto.NewCompilationDto;
 import ru.practicum.main.model.compilation.model.Compilation;
@@ -23,6 +24,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
     private final CompilationMapper mapper;
 
+    @Transactional
     @Override
     public Compilation create(NewCompilationDto compilationDto) {
         var compilation = mapper.fromNewDto(compilationDto);
@@ -34,6 +36,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
     }
 
+    @Transactional
     @Override
     public void delete(Long compId) {
         try {
@@ -43,6 +46,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
     }
 
+    @Transactional
     @Override
     public Compilation update(Long compId, NewCompilationDto compilationDto) {
         var compilation = repository.findById(compId)
@@ -55,12 +59,14 @@ public class CompilationServiceImpl implements CompilationService {
         return repository.save(compilation);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Compilation find(Long compId) {
         return repository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation with id=%d not found.", compId)));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Compilation> findAllPublic(Boolean pinned, Integer from, Integer size) {
         return pinned == null ?
