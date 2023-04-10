@@ -31,4 +31,5 @@ public class EventFullDto {
     LocalDateTime publishedOn;
     Long confirmedRequests;
     Long views;
+    Integer comments;
 }

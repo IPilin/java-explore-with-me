@@ -2,6 +2,7 @@ package ru.practicum.main.service.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.event.model.EventState;
 import ru.practicum.main.model.event.model.Event;
 import ru.practicum.main.model.exception.ConflictException;
@@ -28,11 +29,13 @@ public class RequestServiceImpl implements RequestService {
     private final EventService eventService;
     private final RequestListMapper listMapper;
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Request> getAll(Long userId) {
         return repository.findAllByRequesterIs(userService.get(userId));
     }
 
+    @Transactional
     @Override
     public Request create(Long userId, Long eventId) {
         var user = userService.get(userId);
@@ -51,6 +54,7 @@ public class RequestServiceImpl implements RequestService {
         return repository.save(request);
     }
 
+    @Transactional
     @Override
     public Request cancel(Long userId, Long requestId) {
         var user = userService.get(userId);
@@ -60,12 +64,14 @@ public class RequestServiceImpl implements RequestService {
         return repository.save(request);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Request> getAllInEvent(Long userId, Long eventId) {
         var event = eventService.find(userId, eventId);
         return repository.findAllByEvent(event);
     }
 
+    @Transactional
     @Override
     public Map<String, Collection<RequestDto>> updateRequests(Long userId, Long eventId, UpdateRequestDto updateRequestDto) {
         var event = eventService.find(userId, eventId);

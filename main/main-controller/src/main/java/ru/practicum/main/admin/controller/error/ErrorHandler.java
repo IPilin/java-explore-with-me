@@ -1,6 +1,7 @@
 package ru.practicum.main.admin.controller.error;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +18,8 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler({MethodArgumentNotValidException.class,
+    @ExceptionHandler({
+            MethodArgumentNotValidException.class,
             MethodArgumentTypeMismatchException.class,
             ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -43,9 +45,11 @@ public class ErrorHandler {
         return error;
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({
+            ConflictException.class,
+            DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictException(ConflictException e) {
+    public ApiError handleConflictException(Exception e) {
         var error = ApiError.builder()
                 .status(HttpStatus.CONFLICT.name())
                 .reason("Integrity constraint has been violated.")

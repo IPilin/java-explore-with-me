@@ -3,7 +3,9 @@ package ru.practicum.main.service.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main.model.ViewStatsClient;
+import ru.practicum.main.model.comment.model.Comment;
 import ru.practicum.main.model.constant.AppConstants;
 import ru.practicum.main.model.event.EventMapper;
 import ru.practicum.main.model.event.EventSort;
@@ -17,6 +19,7 @@ import ru.practicum.main.model.exception.ForbiddenException;
 import ru.practicum.main.model.exception.NotFoundException;
 import ru.practicum.main.model.request.model.Request;
 import ru.practicum.main.model.request.model.RequestState;
+import ru.practicum.main.repository.comment.CommentRepository;
 import ru.practicum.main.repository.event.EventRepository;
 import ru.practicum.main.repository.event.LocationRepository;
 import ru.practicum.main.repository.request.RequestRepository;
@@ -34,16 +37,19 @@ public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final EventMapper mapper;
     private final UserService userService;
     private final CategoryService categoryService;
     private final ViewStatsClient statsClient;
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> getAllByUserId(Long userId, Integer from, Integer size) {
         return load(repository.findAllByInitiator(userService.get(userId), PageRequest.of(from / size, size)));
     }
 
+    @Transactional
     @Override
     public Event create(Long userId, NewEventDto eventDto) {
         var event = mapper.fromNewEvent(eventDto);
@@ -55,6 +61,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event find(Long userId, Long eventId) {
         var user = userService.get(userId);
@@ -63,6 +70,7 @@ public class EventServiceImpl implements EventService {
         return load(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event find(Long eventId) {
         var event = repository.findById(eventId)
@@ -70,6 +78,7 @@ public class EventServiceImpl implements EventService {
         return load(event);
     }
 
+    @Transactional
     @Override
     public Event update(Long userId, Long eventId, NewEventDto eventDto) {
         var event = find(userId, eventId);
@@ -90,6 +99,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional
     @Override
     public Event updateAdmin(Long eventId, EventAdminDto eventDto) {
         var event = repository.findById(eventId)
@@ -114,6 +124,7 @@ public class EventServiceImpl implements EventService {
         return repository.save(event);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> findAllAdmin(List<Long> users,
                                           List<EventState> states,
@@ -133,6 +144,7 @@ public class EventServiceImpl implements EventService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Collection<Event> findAllPublic(String text,
                                            List<Long> categories,
@@ -158,6 +170,7 @@ public class EventServiceImpl implements EventService {
         return events;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Event findPublic(Long eventId, String ip) {
         var event = repository.findEventByIdAndStateEquals(eventId, EventState.PUBLISHED)
@@ -186,6 +199,7 @@ public class EventServiceImpl implements EventService {
     private List<Event> load(List<Event> events) {
         loadViews(events);
         loadRequests(events);
+        loadComments(events);
         return events;
     }
 
@@ -209,5 +223,12 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.groupingBy(Request::getEvent, Collectors.counting()));
         events.forEach((event) -> event.setConfirmedRequests(requests.getOrDefault(event, 0L).intValue()));
+    }
+
+    private void loadComments(List<Event> events) {
+        var comments = commentRepository.findAllByEventIn(events)
+                .stream()
+                .collect(Collectors.groupingBy(Comment::getEvent, Collectors.counting()));
+        events.forEach((event) -> event.setComments(comments.getOrDefault(event, 0L).intValue()));
     }
 }
